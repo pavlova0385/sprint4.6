@@ -1,13 +1,13 @@
-package ru.yandex.praktikum.base;
+package ru.yandex.praktikum.test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import ru.yandex.praktikum.pages.MainPage;
-import ru.yandex.praktikum.pages.OrderPage;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class BaseTest {
 
