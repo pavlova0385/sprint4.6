@@ -7,46 +7,52 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
 public class MainPage {
+
+    private static final String URL = "https://qa-scooter.praktikum-services.ru";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
 
+    private final By topOrderButton = By.xpath("(//button[text()='Заказать'])[1]");
+    private final By bottomOrderButton = By.xpath("(//button[text()='Заказать'])[2]");
     private final By cookieButton = By.id("rcc-confirm-button");
 
-    public MainPage(WebDriver driver) {
+    public MainPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = wait;
     }
 
-    public void openAccordionItem(int index) {
+    public void open() {
+        driver.get(URL);
         acceptCookiesIfPresent();
-
-        By questionLocator = By.id(String.format("accordion__heading-%d", index));
-        WebElement question = wait.until(ExpectedConditions.visibilityOfElementLocated(questionLocator));
-
-        scrollToElement(question);
-        wait.until(ExpectedConditions.elementToBeClickable(question)).click();
     }
 
-    public String getAccordionText(int index) {
-        By answerLocator = By.id(String.format("accordion__panel-%d", index));
-        WebElement answer = wait.until(ExpectedConditions.visibilityOfElementLocated(answerLocator));
-        return answer.getText();
+    public void clickTopOrderButton() {
+        wait.until(ExpectedConditions.elementToBeClickable(topOrderButton)).click();
+    }
+
+    public void clickBottomOrderButton() {
+        WebElement button = wait.until(ExpectedConditions.presenceOfElementLocated(bottomOrderButton));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", button);
+        wait.until(ExpectedConditions.elementToBeClickable(button)).click();
+    }
+
+    public void openAccordionItem(int questionIndex) {
+        By question = By.id("accordion__heading-" + questionIndex);
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(question));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+        element.click();
+    }
+
+    public String getAccordionText(int questionIndex) {
+        By answer = By.xpath("//div[@id='accordion__panel-" + questionIndex + "']/p");
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(answer)).getText();
     }
 
     private void acceptCookiesIfPresent() {
         if (!driver.findElements(cookieButton).isEmpty()) {
             wait.until(ExpectedConditions.elementToBeClickable(cookieButton)).click();
         }
-    }
-
-    private void scrollToElement(WebElement element) {
-        ((JavascriptExecutor) driver).executeScript(
-                "arguments[0].scrollIntoView({block: 'center'});",
-                element
-        );
     }
 }

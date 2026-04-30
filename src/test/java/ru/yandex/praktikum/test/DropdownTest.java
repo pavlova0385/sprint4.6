@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.yandex.praktikum.base.BaseTest;
+import ru.yandex.praktikum.pages.MainPage;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,8 +38,9 @@ public class DropdownTest extends BaseTest {
 
     @Test
     public void testAccordionItemOpens() {
-        driver.get(BASE_URL);
+        MainPage mainPage = new MainPage(driver, wait);
 
+        mainPage.open();
         mainPage.openAccordionItem(questionIndex);
         String actualText = mainPage.getAccordionText(questionIndex);
 
